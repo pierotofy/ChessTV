@@ -1,0 +1,95 @@
+html,body{
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+}
+
+#chessboard{
+    box-shadow: 2px 2px 12px 0px #333;
+    height: 100px;
+    width: 100px;
+}
+
+#debug{
+    display: none;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    width: 120px;
+    padding: 4px;
+    border: 1px dashed black;
+    z-index: 4;
+    background: white;
+}
+
+#debug button{
+    display: block;
+    width: 100%;
+    margin-top: 8px;
+}
+
+.rank{
+    font-weight: bold;
+    font-size: 180%;
+    font-family: -apple-system-body;
+    text-shadow: -4px 0 white, 0 4px white, 4px 0 white, 0 -4px white;
+}
+
+.cg-wrap coords.ranks, .cg-wrap coords.files{
+    font-size: 12px;
+}
+
+.flash{
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 220%;
+    font-family: -apple-system-body;
+    z-index: 3;
+    position: absolute;
+    top: 46%;
+    left: 0;
+    right: 100%;
+    width: 100%;
+    text-align: center;
+    animation-duration: 0.25s;
+    animation-name: fadeSlide;
+    animation-delay: 0.7s;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-in;
+}
+
+.flash .text{
+    box-shadow: 0 0 10px #424242;
+    background: rgb(40 131 54 / 85%);
+    border-radius: 0px;
+    padding: 8px;
+    color: white;
+}
+
+body.hide-pawns piece.pawn{
+    opacity: 0;
+}
+body.hide-pieces piece.knight,
+body.hide-pieces piece.bishop,
+body.hide-pieces piece.queen,
+body.hide-pieces piece.king,
+body.hide-pieces piece.rook
+{
+    opacity: 0;
+}
+
+@keyframes fadeSlide {
+    from {
+      opacity: 100%;
+      top: 46%;
+    }
+  
+    to {
+      opacity: 0%;
+      top: 55%;
+    }
+  }
