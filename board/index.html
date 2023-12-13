@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <title>Chess TV</title>
+    <title>Chess TV - Traps</title>
 
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="vendor/chessground/assets/chessground.base.css" />
@@ -13,23 +13,22 @@
     <link rel="stylesheet" href="vendor/chessground/assets/chessground.cburnett.css" />
     <script src="vendor/chessground/chessground.min.js"></script>
     <script src="vendor/chess.js"></script>
-    <!-- <script src="vendor/openings.js"></script> -->
     <script src="app.js"></script>
-    <script src="vendor/confetti.browser.min.js"></script>
 </head>
 <body onload="main()">
     <div id="chessboard"></div>
-    <!-- <div id="debug">
-        Debug
+    <div id="panel">
 
-        <button onclick="document.dispatchEvent(new Event('rewind'))">Rewind</button>
-        <button onclick="document.dispatchEvent(new Event('playForward'))">Forward</button>
-        <button onclick="document.dispatchEvent(new Event('playBack'))">Back</button>
-        <button onclick="document.dispatchEvent(new Event('togglePawns'))">Toggle Pawns</button>
-        <button onclick="document.dispatchEvent(new Event('togglePieces'))">Toggle Pieces</button>
-        <button onclick="document.dispatchEvent(new Event('downloadScores'))">Download Scores</button>
+        <button onclick="document.dispatchEvent(new Event('prev'))">Prev (←)</button>
+        <button onclick="document.dispatchEvent(new Event('next'))">Next (→)</button>
+        <button onclick="document.dispatchEvent(new Event('repeat'))">Repeat (R)</button>
+        <button onclick="document.dispatchEvent(new Event('pause'))">Pause (Space)</button>
+        <button onclick="document.dispatchEvent(new Event('analysis'))">Analysis (A)</button>
+        <button onclick="document.dispatchEvent(new Event('faster'))">Faster (F)</button>
+        <button onclick="document.dispatchEvent(new Event('slower'))">Slower (S)</button>
         
+        <div class="links">Made with <span class="red">❤</span> by <a href="https://github.com/pierotofy">pierotofy</a> | <a href="https://github.com/pierotofy/ChessTV">Edit this on GitHub</a></div>
         
-    </div> -->
+    </div>
 </body>
 </html>

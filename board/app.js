@@ -7,17 +7,17 @@ function parseQueryParams(){
     return JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
 }
 
-let { color, gameId, speed } = parseQueryParams();
+let { color, gameId, speed, f } = parseQueryParams();
 if (!color) color = "white";
 if (!gameId) gameId = 0;
-if (!speed) speed = 2000;
+if (!speed) speed = 1000;
+if (!f) f = "traps.json";
 gameId = parseInt(gameId);
 
 const domBoard = document.getElementById('chessboard');
 
 const pieceStack = [];
 const movesStack = [];
-let score = {};
 
 
 let lastSize = {
@@ -26,13 +26,14 @@ let lastSize = {
 };
 const updateSize = () => {
     const w = window.innerWidth;
-    const h = window.innerHeight;
+    const h = window.innerHeight - 80;
     if (lastSize.w === w && lastSize.h === h) return;
 
     const size = Math.min(w, h) + 1;
 
     domBoard.style.width = size + 'px';
     domBoard.style.height = size + 'px';
+    domBoard.style.marginBottom = '80px';
 
     if (w > h){
         domBoard.style.marginLeft = (w - h) / 2 + 'px';
@@ -49,10 +50,8 @@ const updateSize = () => {
 // Chess engine
 const game = new Chess();
 const calcDests = () => {
-    const dests = new Map();
-    return dests;
+    return new Map();
 }
-
 
 
 const updateCg = () => {
@@ -209,23 +208,6 @@ const cg = Chessground(domBoard, {
     }
 });
 
-// Setup colors
-const Colors = {
-    green: '#009d07',
-    pink: '#b700af',
-    blue: '#0057E9',
-    orange: '#ff8d00',
-    grey: '#4a4a4a',
-    red: '#b70000',
-    white: "#898989"
-};
-let cgBrushes = {};
-for (let k in Colors){
-    cgBrushes[k] = {key: k, color: Colors[k], opacity: 1, lineWidth: 10};
-}
-cg.set({drawable: { brushes: cgBrushes}});
-
-
 let moves = [];
 
 let playInt = null;
@@ -280,7 +262,7 @@ const nextGame = () => {
         color = color == 'black' ? 'white' : 'black';
         gameId = 0;
     }
-    window.location.href = window.location.protocol + "//" + window.location.host + "?gameId=" + (parseInt(gameId)) + "&speed=" + speed + "&color=" + color; 
+    window.location.href = window.location.protocol + "//" + window.location.host + "?gameId=" + (parseInt(gameId)) + "&speed=" + speed + "&color=" + color + "&f=" + encodeURIComponent(f); 
 }
 
 const analysis = () => {
@@ -305,7 +287,7 @@ const uciToMove = (uci) => {
 
 let games;
 const loadTraps = (cb) => {
-    fetch(`/traps.json`)
+    fetch(f)
         .then(response => response.text())
         .then((text) => {
             games = JSON.parse(text);
@@ -327,7 +309,7 @@ const loadTraps = (cb) => {
         });
 };
 
-const startGame = () => {
+const start = () => {
     loadTraps((loadedMoves, playerColor) => {
         moves = loadedMoves;
         color = playerColor;
@@ -343,6 +325,33 @@ window.addEventListener('resize', updateSize);
 setInterval(updateSize, 200);
 
 
+const prev = () => {
+    if (gameId == 0){
+        color = color == 'black' ? 'white' : 'black';
+        gameId = games[color].length - 1;
+    }else{
+        gameId--;
+    }
+    nextGame();
+}
+
+const next = () => {
+    if (gameId == games[color].length - 1){
+        color = color == 'black' ? 'white' : 'black';
+        gameId = 0;
+    }else{
+        gameId++;
+    }
+    nextGame();
+}
+
+const faster = () => {
+    speed /= 1.5;
+}
+
+const slower = () => {
+    speed *= 1.5;
+}
 
 window.addEventListener('keydown', (e) => {
     console.log(e.keyCode);
@@ -353,36 +362,31 @@ window.addEventListener('keydown', (e) => {
     }else if (e.keyCode === 82){
         nextGame();
     }else if (e.keyCode === 37){
-        if (gameId == 0){
-            color = color == 'black' ? 'white' : 'black';
-            gameId = games[color].length - 1;
-        }else{
-            gameId--;
-        }
-        nextGame();
+        prev();
     }else if (e.keyCode === 39){
-        if (gameId == games[color].length - 1){
-            color = color == 'black' ? 'white' : 'black';
-            gameId = 0;
-        }else{
-            gameId++;
-        }
-        nextGame();
+        next();
+    }else if (e.keyCode === 70){
+        faster();
+    }else if (e.keyCode === 83){
+        slower();
     }
 });
 
-// Debug
-if (/192\.168\.\d+\.\d+/.test(window.location.hostname) ||
-    /localhost/.test(window.location.hostname)){
+document.addEventListener('next', next);
+document.addEventListener('prev', prev);
+document.addEventListener('pause', pauseResume);
+document.addEventListener('repeat', nextGame);
+document.addEventListener('analysis', analysis);
+document.addEventListener('faster', faster);
+document.addEventListener('slower', slower);
 
-    window.cg = cg;
-    window.game = game;
-    window.domBoard = domBoard;
-    window.movesStack = movesStack;
-}
+window.cg = cg;
+window.game = game;
+window.domBoard = domBoard;
+window.movesStack = movesStack;
 
 // ==== END INIT ====
 
-startGame();
+start();
 
 }
