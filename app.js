@@ -262,7 +262,7 @@ const nextGame = () => {
         color = color == 'black' ? 'white' : 'black';
         gameId = 0;
     }
-    window.location.href = window.location.protocol + "//" + window.location.host + "?gameId=" + (parseInt(gameId)) + "&speed=" + speed + "&color=" + color + "&f=" + encodeURIComponent(f); 
+    window.location.href = "?gameId=" + (parseInt(gameId)) + "&speed=" + speed + "&color=" + color + "&f=" + encodeURIComponent(f); 
 }
 
 const analysis = () => {
